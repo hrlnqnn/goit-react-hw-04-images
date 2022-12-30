@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import css from './Modal.module.css';
 
-const modalRoot = document.querySelector('#modal-root');
+const modalRoot = document.querySelector('#root');
 
 export class Modal extends Component {
     closeModal = e => {

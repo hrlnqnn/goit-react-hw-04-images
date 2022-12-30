@@ -33,7 +33,7 @@ img {
   height: auto;
 }
 
-.app {
+.App {
   display: grid;
   grid-template-columns: 1fr;
   grid-gap: 16px;

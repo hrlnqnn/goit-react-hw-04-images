@@ -79,7 +79,7 @@ export class App extends Component {
     const { onSearchSubmit, onToggleModal, onClickLoadMore } = this;
 
     return (
-      <div className="app">
+      <div className="App">
         <SearchBar onSubmit={onSearchSubmit} />
         {images.length > 0 && (
           <ImageGallery images={images} onClick={onToggleModal} />
