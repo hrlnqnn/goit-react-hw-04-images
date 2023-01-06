@@ -8,24 +8,38 @@ import {
   Error,
 } from 'components';
 
-import { Component } from 'react';
+import { useState, useEffect } from 'react';
 
-const INITIAL_STATE = {
-  images: [],
-  currentModalImage: null,
-  isLoading: false,
-  page: 1,
-  query: null,
-  imagesTotalHits: 0,
-  error: null,
-};
+export const App = () => {
+  const [images, setImages] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const [query, setQuery] = useState('');
+  const [totalHits, setTotalHits] = useState(0);
+  const [error, setError] = useState(null);
+  const [currentModalImage, setCurrentModalImage] = useState(null);
 
-export class App extends Component {
-  state = {
-    ...INITIAL_STATE,
-  };
+  useEffect(() => {
+    if (!query) {
+      return;
+    }
 
-  onSearchSubmit = e => {
+    setIsLoading(true);
+
+    apiPixabay
+      .getImages(query, page)
+      .then(({ hits: newImages, totalHits }) => {
+        setImages(prevImages => [...prevImages, ...newImages]);
+        setTotalHits(totalHits);
+      })
+      .catch(err => {
+        reset();
+        setError(err.message);
+      })
+      .finally(setIsLoading(false));
+  }, [query, page]);
+
+  const onSearchSubmit = e => {
     e.preventDefault();
 
     const query = e.target.query.value;
@@ -34,65 +48,35 @@ export class App extends Component {
       return alert('Search field is empty! Nothing to search...');
     }
 
-    this.setState({
-      ...INITIAL_STATE,
-      query: query.toLowerCase().trim(),
-      isLoading: true,
-    });
+    setQuery(query.toLowerCase().trim());
+
+    reset();
   };
 
-  onClickLoadMore = () => {
-    this.setState(prevState => ({
-      page: prevState.page + 1,
-      isLoading: true,
-    }));
+  const onClickLoadMore = () => setPage(prevPage => prevPage + 1);
+
+  const reset = () => {
+    setImages([]);
+    setPage(1);
+    setTotalHits(0);
+    setError(null);
+    setCurrentModalImage(null);
   };
 
-  onToggleModal = imageSrc =>
-    this.setState({ currentModalImage: imageSrc || null });
+  const onToggleModal = imageSrc => setCurrentModalImage(imageSrc);
 
-  async componentDidUpdate(_, prevState) {
-    const { query, page } = this.state;
-
-    if (prevState.page !== page || prevState.query !== query) {
-      try {
-        const { hits: images, totalHits } = await apiPixabay.getImages(
-          query,
-          page
-        );
-
-        this.setState(prevState => ({
-          images: [...prevState.images, ...images],
-          imagesTotalHits: totalHits,
-        }));
-      } catch (e) {
-        this.setState({ imagesTotalHits: 0, images: [], error: e.message });
-      } finally {
-        this.setState({ isLoading: false });
-      }
-    }
-  }
-
-  render() {
-    const { images, currentModalImage, isLoading, error, imagesTotalHits } =
-      this.state;
-    const { onSearchSubmit, onToggleModal, onClickLoadMore } = this;
-
-    return (
-      <div className="App">
-        <SearchBar onSubmit={onSearchSubmit} />
-        {images.length > 0 && (
-          <ImageGallery images={images} onClick={onToggleModal} />
-        )}
-        {error && <Error title={error} />}
-        {currentModalImage && (
-          <Modal image={currentModalImage} onCloseModal={onToggleModal} />
-        )}
-        {isLoading && <Loader />}
-        {images.length < imagesTotalHits && (
-          <Button onClick={onClickLoadMore} />
-        )}
-      </div>
-    );
-  }
-}
+  return (
+    <div className="App">
+      <SearchBar onSubmit={onSearchSubmit} />
+      {images.length > 0 && (
+        <ImageGallery images={images} onToggleModal={onToggleModal} />
+      )}
+      {error && <Error title={error} />}
+      {currentModalImage && (
+        <Modal image={currentModalImage} onToggleModal={onToggleModal} />
+      )}
+      {isLoading && <Loader />}
+      {images.length < totalHits && <Button onClick={onClickLoadMore} />}
+    </div>
+  );
+};

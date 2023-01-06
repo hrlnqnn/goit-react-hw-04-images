@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 
 import { ImageGalleryItem } from 'components';
 
-export const ImageGallery = ({ images, onClick }) => (
+export const ImageGallery = ({ images, onToggleModal }) => (
     <ul className={css.gallery}>
         {images.length > 0 &&
             images.map(({ id, ...imageData }) => (
-                <ImageGalleryItem key={id} imageData={imageData} onClick={onClick} />
+                <ImageGalleryItem key={id} imageData={imageData} onClick={onToggleModal} />
             ))}
     </ul>
 );
@@ -18,5 +18,5 @@ ImageGallery.propTypes = {
             id: PropTypes.number.isRequired,
         }).isRequired
     ).isRequired,
-    onClick: PropTypes.func.isRequired,
+    onToggleModal: PropTypes.func.isRequired,
 };
