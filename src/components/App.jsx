@@ -59,11 +59,9 @@ export const App = () => {
     setImages([]);
     setPage(1);
     setTotalHits(0);
-    setError(null);
-    setCurrentModalImage(null);
   };
 
-  const onToggleModal = imageSrc => setCurrentModalImage(imageSrc);
+  const onToggleModal = (imageSrc = null) => setCurrentModalImage(imageSrc);
 
   return (
     <div className="App">
