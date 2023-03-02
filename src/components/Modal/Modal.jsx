@@ -8,17 +8,29 @@ const modalRoot = document.querySelector('#root');
 
 export const Modal = ({ image, onToggleModal }) => {
     const closeModal = useCallback(
-        e => {
-            if (e.code === 'Escape' || e.target === e.currentTarget) onToggleModal();
+        (e) => {
+            if (e.code === "Escape" || e.target === e.currentTarget) onToggleModal();
         },
         [onToggleModal]
     );
 
     useEffect(() => {
-        window.addEventListener('keydown', closeModal);
+        const closeModal = (e) => {
+            if (e.code === "Escape") {
+                onToggleModal();
+            }
+        };
 
-        return () => window.removeEventListener('keydown', closeModal);
-    }, [closeModal]);
+        window.addEventListener("keydown", closeModal);
+
+        return () => window.removeEventListener("keydown", closeModal);
+    }, [onToggleModal]);
+};
+
+const handleClick = (e) => {
+    if (e.target === e.currentTarget) {
+        onToggleModal();
+    }
 
     return createPortal(
         <div className={css.overlay} onClick={closeModal}>
