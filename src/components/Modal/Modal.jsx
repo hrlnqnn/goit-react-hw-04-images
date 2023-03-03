@@ -15,7 +15,7 @@ export const Modal = ({ image, onToggleModal }) => {
         window.addEventListener('keydown', closeModal);
 
         return () => window.removeEventListener('keydown', closeModal);
-    }, [closeModal]);
+    }, []);
 
     const handleClickModal = (e) => {
         if (e.target === e.currentTarget) onToggleModal();
