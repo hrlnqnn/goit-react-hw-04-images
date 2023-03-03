@@ -4,14 +4,14 @@ import PropTypes from 'prop-types';
 
 export const SearchBar = ({ onSubmit }) => {
     const handleSubmit = (e) => {
-        e.preventSubmit();
+        e.preventDefault();
         const query = e.target.query.value.trim().toLowerCase();
         onSubmit(query);
     }
 
     return (
         <header className={css.searchBar}>
-            <form className={css.searchForm} onSubmit={onSubmit}>
+            <form className={css.searchForm} onSubmit={handleSubmit}>
                 <button type="submit" className={css.searchFormButton}>
                     <CiSearch style={{ width: 30, height: 30 }} />
                 </button>

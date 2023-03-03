@@ -40,7 +40,7 @@ export const App = () => {
   }, [query, page]);
 
   const onSearchSubmit = (searchQuery) => {
-    if (query === '') {
+    if (searchQuery === '') {
       return alert('Search field is empty! Nothing to search...');
     }
     if (searchQuery === query) {

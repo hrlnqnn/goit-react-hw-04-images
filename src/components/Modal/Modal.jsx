@@ -12,22 +12,10 @@ export const Modal = ({ image, onToggleModal }) => {
     };
 
     useEffect(() => {
-        const closeModal = (e) => {
-            if (e.code === "Escape") {
-                onToggleModal();
-            }
-        };
+        window.addEventListener('keydown', closeModal);
 
-        window.addEventListener("keydown", closeModal);
-
-        return () => window.removeEventListener("keydown", closeModal);
-    }, [onToggleModal]);
-};
-
-const handleClick = (e) => {
-    if (e.target === e.currentTarget) {
-        onToggleModal();
-    }
+        return () => window.removeEventListener('keydown', closeModal);
+    }, [closeModal]);
 
     const handleClickModal = (e) => {
         if (e.target === e.currentTarget) onToggleModal();
