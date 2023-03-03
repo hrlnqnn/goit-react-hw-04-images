@@ -29,31 +29,30 @@ export const App = () => {
     apiPixabay
       .getImages(query, page)
       .then(({ hits: newImages, totalHits }) => {
-        setImages(prevImages => [...prevImages, ...newImages]);
+        setImages((prevImages) => [...prevImages, ...newImages]);
         setTotalHits(totalHits);
       })
-      .catch(err => {
+      .catch((err) => {
         reset();
         setError(err.message);
       })
       .finally(setIsLoading(false));
   }, [query, page]);
 
-  const onSearchSubmit = e => {
-    e.preventDefault();
-
-    const query = e.target.query.value;
-
+  const onSearchSubmit = (searchQuery) => {
     if (query === '') {
       return alert('Search field is empty! Nothing to search...');
     }
+    if (searchQuery === query) {
+      return alert("Change query...");
+    }
 
-    setQuery(query.toLowerCase().trim());
+    setQuery(searchQuery);
 
     reset();
   };
 
-  const onClickLoadMore = () => setPage(prevPage => prevPage + 1);
+  const onClickLoadMore = () => setPage((prevPage) => prevPage + 1);
 
   const reset = () => {
     setImages([]);
